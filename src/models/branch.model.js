@@ -29,7 +29,7 @@ BranchModel.init({
     modelName: 'BranchModel',
     tableName: 'branch',
     timestamps: true,
-    paranoid: true, // This enables soft deletes
+    paranoid: false,
 });
 
 module.exports = BranchModel;

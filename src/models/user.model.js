@@ -40,8 +40,8 @@ UserModel.init({
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: BranchModel, // Reference the Branch model
-            key: 'id' // The field to reference in the Branch model
+            model: BranchModel,
+            key: 'id'
         }
     }
 }, {

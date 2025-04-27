@@ -1,24 +1,28 @@
 const BranchModel = require('../models/branch.model');
 const HttpException = require('../utils/HttpException.utils');
 const BaseController = require('./BaseController');
-const { Op } = require('sequelize');
 
 /******************************************************************************
  *                              Branch Controller
  ******************************************************************************/
 class BranchController extends BaseController {
+    // Get all branches
     getAll = async (req, res, next) => {
-        const branches = await BranchModel.findAll({
+        let branchList = await BranchModel.findAll({
             order: [
                 ['name', 'ASC'],
                 ['id', 'ASC']
             ]
         });
-        res.send(branches);
+
+        res.send(branchList);
     };
 
+    // Get a branch by its ID
     getById = async (req, res, next) => {
-        const branch = await BranchModel.findOne({ where: { id: req.params.id } });
+        const branch = await BranchModel.findOne({
+            where: { id: req.params.id }
+        });
 
         if (!branch) {
             throw new HttpException(404, req.mf('data not found'));
@@ -27,33 +31,35 @@ class BranchController extends BaseController {
         res.send(branch);
     };
 
+    // Create a new branch
     create = async (req, res, next) => {
         this.checkValidation(req);
 
-        const { name, address } = req.body;
+        let { name, address } = req.body;
 
-        const branch = await BranchModel.create({
+        const newBranch = await BranchModel.create({
             name,
             address
         });
 
-        if (!branch) {
+        if (!newBranch) {
             throw new HttpException(500, req.mf('Something went wrong'));
         }
 
-        res.status(201).send(branch);
+        res.status(201).send(newBranch);
     };
 
+    // Update an existing branch
     update = async (req, res, next) => {
         this.checkValidation(req);
+
+        let { name, address } = req.body;
 
         const branch = await BranchModel.findOne({ where: { id: req.params.id } });
 
         if (!branch) {
             throw new HttpException(404, req.mf('data not found'));
         }
-
-        const { name, address } = req.body;
 
         branch.name = name;
         branch.address = address;
@@ -63,6 +69,7 @@ class BranchController extends BaseController {
         res.send(branch);
     };
 
+    // Delete a branch
     delete = async (req, res, next) => {
         const branch = await BranchModel.findOne({ where: { id: req.params.id } });
 
@@ -83,4 +90,4 @@ class BranchController extends BaseController {
 /******************************************************************************
  *                               Export
  ******************************************************************************/
-module.exports = new BranchController();
+module.exports = new BranchController;
